@@ -1,0 +1,15 @@
+<template>
+    <lightning-card>
+        <h3 slot="title">
+            <lightning-icon icon-name="utility:connected_apps" size="small"></lightning-icon>
+            Add Money
+        </h3>
+        <div class="slds-p-around_medium lgc-bg">
+            <lightning-input type="number" name="amount" value={value} label="Enter Amount" onchange={handleChange}></lightning-input>
+        </div>
+        <div>
+            <lightning-button onclick={handleClick} label="Add" icon-name="utility:money" class="slds-m-left_x-small"></lightning-button>
+        </div>
+        
+    </lightning-card>
+</template>
