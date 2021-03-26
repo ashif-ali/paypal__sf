@@ -118,7 +118,6 @@ export default class AllBills2 extends LightningElement {
       fields[SUCCESSFULL.fieldApiName] = true;
       fields[FINAL_WALLET_BALANCE.fieldApiName] =
         this.walletBalance - this.finalPayableAmount;
-      console.log(this.paid);
       console.log(selected[0]);
 
       const recordInput = { fields };
