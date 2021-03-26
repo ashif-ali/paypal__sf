@@ -3,6 +3,8 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getBills from "@salesforce/apex/BillsController.getBills";
 import { updateRecord } from "lightning/uiRecordApi";
 import PAID from "@salesforce/schema/Bills__c.Paid__c";
+import SUCCESSFULL from "@salesforce/schema/Bills__c.Successfull__c";
+import FINAL_WALLET_BALANCE from "@salesforce/schema/Bills__c.Final_Wallet_Balance__c";
 import ID_FIELD from "@salesforce/schema/Bills__c.Id";
 
 const columns = [
@@ -59,6 +61,9 @@ export default class AllBills2 extends LightningElement {
   paid;
 
   @track
+  finalWalletBalance;
+
+  @track
   datas;
   columns = columns;
 
@@ -70,7 +75,6 @@ export default class AllBills2 extends LightningElement {
         this.datas = bills;
         // console.log(bills);
         console.log(this.recordId);
-        console.log(this.datas[1].Id);
       })
       .catch((error) => {
         console.log(error);
@@ -83,9 +87,10 @@ export default class AllBills2 extends LightningElement {
     this.finalPayableAmount = selected[0].Final_Payable_Amount__c;
     this.walletBalance = selected[0].Available_wallet_balance__c;
     this.paid = selected[0].Paid__c;
-    console.log(this.finalPayableAmount);
-    console.log(this.walletBalance);
-    console.log(this.paid);
+    this.finalWalletBalance = selected[0].Final_Wallet_Balance__c;
+    console.log(this.finalWalletBalance);
+
+    console.log(selected);
 
     if (this.paid === true) {
       const evt = new ShowToastEvent({
@@ -108,8 +113,13 @@ export default class AllBills2 extends LightningElement {
     if (this.paid === false && this.finalPayableAmount < this.walletBalance) {
       this.paid = true;
       const fields = {};
-      fields[ID_FIELD.fieldApiName] = this.datas[0].Id;
+      fields[ID_FIELD.fieldApiName] = selected[0].Id;
       fields[PAID.fieldApiName] = this.paid;
+      fields[SUCCESSFULL.fieldApiName] = true;
+      fields[FINAL_WALLET_BALANCE.fieldApiName] =
+        this.walletBalance - this.finalPayableAmount;
+      console.log(this.paid);
+      console.log(selected[0]);
 
       const recordInput = { fields };
       updateRecord(recordInput).then((record) => console.log(record));
