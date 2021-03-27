@@ -3,7 +3,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getBills from "@salesforce/apex/BillsController.getBills";
 import { updateRecord } from "lightning/uiRecordApi";
 import PAID from "@salesforce/schema/Bills__c.Paid__c";
-import SUCCESSFULL from "@salesforce/schema/Bills__c.Successfull__c";
+//import SUCCESSFULL from "@salesforce/schema/Bills__c.Successfull__c";
 import FINAL_WALLET_BALANCE from "@salesforce/schema/Bills__c.Final_Wallet_Balance__c";
 import ID_FIELD from "@salesforce/schema/Bills__c.Id";
 
@@ -115,13 +115,19 @@ export default class AllBills2 extends LightningElement {
       const fields = {};
       fields[ID_FIELD.fieldApiName] = selected[0].Id;
       fields[PAID.fieldApiName] = this.paid;
-      fields[SUCCESSFULL.fieldApiName] = true;
+      //fields[SUCCESSFULL.fieldApiName] = true;
       fields[FINAL_WALLET_BALANCE.fieldApiName] =
         this.walletBalance - this.finalPayableAmount;
       console.log(selected[0]);
 
       const recordInput = { fields };
       updateRecord(recordInput).then((record) => console.log(record));
+      const evt = new ShowToastEvent({
+        title: "Paid",
+        message: "You Have paid the bill",
+        variant: "success"
+      });
+      this.dispatchEvent(evt);
     }
   }
 }
